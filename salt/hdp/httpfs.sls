@@ -1,4 +1,5 @@
 # Install httpfs, note no need to specify version as it comes from the hdp repo mirror
+{% set java_home = salt['pillar.get']('java:java_home', '') %}
 hdp-httpfs_pkg:
   pkg.installed:
     - name: hadoop-httpfs
@@ -18,6 +19,12 @@ hdp-httpfs_webapp_link:
     - target: /usr/hdp/current/hadoop-httpfs/webapps
     - user: httpfs
     - group: hadoop
+
+hdp-httpfs_java_home:
+  file.append:
+    - name: /etc/hadoop-httpfs/conf/httpfs-env.sh
+    - text:
+      - "export JAVA_HOME={{ java_home }}"
 
 hdp-httpfs_service_unit:
   file.managed:
